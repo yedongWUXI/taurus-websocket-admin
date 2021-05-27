@@ -1,0 +1,6 @@
+spring:
+  # 环境 dev|test|prod
+  profiles:
+    active: dev
+logging:
+  path: "./logs/taurus-websocket-admin"
