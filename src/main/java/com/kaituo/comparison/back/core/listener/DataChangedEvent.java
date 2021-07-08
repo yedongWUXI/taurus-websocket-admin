@@ -5,7 +5,12 @@ import org.springframework.context.ApplicationEvent;
 import java.util.List;
 
 /**
- * Data change event.
+ * Data change 事件实体 ,用于传输数据。
+ *
+ * eventType和groupKey都是只是分类,是自定义的。可以用在业务逻辑上
+ *
+ * 具体传输数据是在 父类的 source上
+ *
  *
  */
 public class DataChangedEvent extends ApplicationEvent {
@@ -20,11 +25,6 @@ public class DataChangedEvent extends ApplicationEvent {
         this.groupKey = groupKey;
     }
 
-    /**
-     * Gets event type.
-     *
-     * @return the event type
-     */
     String getEventType() {
         return eventType;
     }
@@ -34,11 +34,6 @@ public class DataChangedEvent extends ApplicationEvent {
         return (List<?>) super.getSource();
     }
 
-    /**
-     * Gets group key.
-     *
-     * @return the group key
-     */
     public String getGroupKey() {
         return this.groupKey;
     }

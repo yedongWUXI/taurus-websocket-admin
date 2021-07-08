@@ -19,14 +19,15 @@ import java.util.List;
 @Slf4j
 public class SyncDataServiceImpl implements SyncDataService {
 
+    //这个不需要配置  直接就能autowired  (具体在哪个包里注入的不清楚)
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
 
     /**
      * 初始化数据
+     * type暂时还没用到
      *
-     *   type暂时还没用到
      * @param type the type
      * @return
      */
@@ -38,13 +39,10 @@ public class SyncDataServiceImpl implements SyncDataService {
     }
 
 
-
-
-
     /**
      * 同步删除数据
+     * type暂时还没用到
      *
-     *   type暂时还没用到
      * @param type the type
      * @return
      */
@@ -54,10 +52,6 @@ public class SyncDataServiceImpl implements SyncDataService {
         eventPublisher.publishEvent(new DataChangedEvent("delete", type, listDelete));
         return true;
     }
-
-
-
-
 
 
 }

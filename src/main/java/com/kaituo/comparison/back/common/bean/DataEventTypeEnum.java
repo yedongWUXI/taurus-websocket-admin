@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.kaituo.comparison.back.core.websocket;
+package com.kaituo.comparison.back.common.bean;
 
 /**
  * The enum Data event type.
@@ -44,8 +44,7 @@ public enum DataEventTypeEnum {
     REFRESH,
 
     /**
-     * Myself data event type enum.
      */
-    MYSELF;
+    INIT
 
 }

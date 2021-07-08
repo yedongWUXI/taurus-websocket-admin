@@ -17,6 +17,7 @@
 
 package com.kaituo.comparison.back.core.websocket;
 
+import com.kaituo.comparison.back.common.bean.DataEventTypeEnum;
 import com.kaituo.comparison.back.common.util.spring.SpringBeanUtils;
 import com.kaituo.comparison.back.core.service.SyncDataServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -32,12 +33,14 @@ import java.util.concurrent.CopyOnWriteArraySet;
 /**
  * The type Websocket data changed listener.
  *
+ * 开启websocket服务端
+ *
  * @since 2.0.0
  */
 @ServerEndpoint("/websocket")
-public class WebsocketCollector {
+public class WebSocketCollector {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebsocketCollector.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketCollector.class);
 
     private static final Set<Session> SESSION_SET = new CopyOnWriteArraySet<>();
 
@@ -57,13 +60,16 @@ public class WebsocketCollector {
     /**
      * On message.
      *
-     * @param message the message
+     * 接收 taurus-websocket-web 的message,并记录它的session
+     *
+     * @param message the message       服务端给客户端发消息是通过session来完成的，想要指定用户发送消息就得拿到对方用户的session，用它来发送消息
      * @param session the session
      */
     @OnMessage
     public void onMessage(final String message, final Session session) {
-        if (message.equals(DataEventTypeEnum.MYSELF.name())) {
-            WebsocketCollector.session = session;
+        //给taurus-websocket-web发送初始化数据
+        if (message.equals(DataEventTypeEnum.INIT.name())) {
+            WebSocketCollector.session = session;
             SpringBeanUtils.getInstance().getBean(SyncDataServiceImpl.class).syncAll("");
         }
     }
@@ -76,7 +82,7 @@ public class WebsocketCollector {
     @OnClose
     public void onClose(final Session session) {
         SESSION_SET.remove(session);
-        WebsocketCollector.session = null;
+        WebSocketCollector.session = null;
     }
 
     /**
@@ -88,12 +94,13 @@ public class WebsocketCollector {
     @OnError
     public void onError(final Session session, final Throwable error) {
         SESSION_SET.remove(session);
-        WebsocketCollector.session = null;
+        WebSocketCollector.session = null;
         LOGGER.error("websocket collection error:", error);
     }
 
     /**
      * Send.
+     * 给记录的客户端发送消息
      *
      * @param message the message
      * @param type    the type
